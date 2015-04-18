@@ -102,6 +102,13 @@ module.exports = function(grunt) {
                 },
                 {
                     expand: true,
+                    cwd: "src/resources",
+                    src: ['**/*'],
+                    dest: 'dist/resources',
+                    mode: 755
+                },
+                {
+                    expand: true,
                     flatten: true,
                     src: ['src/index.html'],
                     dest: 'dist/',
@@ -137,7 +144,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-injector');
     grunt_config["injector"] = {
         options: {
-            ignorePath : "dist"
+            ignorePath : "dist",
+            // We want everything from the library folder first
+            sort : function(a, b) {
+                return b.substr(0, 4) === "/lib";
+            }
         },
         build: {
             files: {
