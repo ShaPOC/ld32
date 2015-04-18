@@ -1,3 +1,7 @@
+## Specific for this project ##
+
+dist/
+
 ## Mac OS X ##
 
 .DS_Store
