@@ -1,3 +1,21 @@
+/**
+ *  [[GAME_TITLE]]
+ *  [[GAME_DESCRIPTION]]
+ *
+ *  The loading state visualises the loading of the entire
+ *  game for the user.
+ *
+ *  Phaser version 2.3.0 "Tarabon"
+ *  --------------------------------------------------------
+ *  @package    [[GAME_TITLE]]
+ *  @author     Jimmy Aupperlee <j.aup.gt@gmail.com>
+ *  @license    GPLv3
+ *  @version    0.0.1
+ *  @since      File available since Release 0.0.1
+ */
+
+'use strict';
+
 module.exports = {
 
     loadingLabel: function () {
@@ -21,6 +39,7 @@ module.exports = {
     },
 
     create: function () {
-        game.state.start('menu');
+        //game.state.start('menu');
+        game.state.start('play');
     }
 };

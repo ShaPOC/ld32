@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="32" tileheight="32" nextobjectid="22">
+ <tileset firstgid="1" name="Tiles" tilewidth="32" tileheight="32">
+  <image source="../../../../Downloads/graphicriver-9066848-fantasy-sidescroller-game-kit/Tiles and Objects/Tiles.png" width="320" height="288"/>
+ </tileset>
+ <layer name="Background" width="100" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1TsKwzAQRdFZVj5tSjudyf53khmwiTCpPSrOgQfGpS5CEQAAAAAAAAAAAAAAAAAAXGnL3XJrbsk9c/f9P9c7ehwt9Og13o9qUV306LPF/7PXo0ede92J92l69KhzX+P3nn/2bz16nHssoccMHsPo9xpGPz3mosdc9JiLHj2+SLQR8A==
+  </data>
+ </layer>
+ <layer name="Main" width="100" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt27EKwjAUBdCIiyIOKihOdnR20cFZdNX//xcTa7HUwTrUFnsOXCikw6OXJFNDAIDvLT8EAAAAAAAAAAAAAAAAAJqwiZnGHNoepEfSf4PrZ9LzqrRW9HFsYS7eFX2c2h6EB+dVdwxiZiHvY9vyLP9qH3Mu5RIzrLyTekh3SeoiC3kfu9+N2CvXSm4h/95lk5hRzDi8+nBeNaNuH/OYRdBH0+yPbrE/uqVuH1kp+mjOHRd0EBg=
+  </data>
+ </layer>
+ <layer name="Decorations" width="100" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1KERACAMBEE0MxRAA3RC/y2hyYBOxK57d+pbAwAAAAAAAAAAAAAAAAAAgLeZHcBlh91TKohWdgAU5J/gb2QHAFDeAad0AKY=
+  </data>
+ </layer>
+ <objectgroup name="Collision">
+  <object id="8" x="-1" y="1407" width="198.5" height="191.5"/>
+  <object id="9" x="290" y="1408" width="94.5" height="191.5"/>
+  <object id="10" x="353" y="1376" width="32" height="30.5"/>
+  <object id="11" type="walljump" x="385" y="1248" width="59.5" height="351"/>
+  <object id="17" type="walljump" x="310" y="1279" width="10.5" height="35.5"/>
+  <object id="19" x="159.5" y="1279" width="149.5" height="35.5"/>
+ </objectgroup>
+ <objectgroup name="Objects">
+  <object id="4" name="LevelStart" type="PlayerStart" x="26" y="1384" width="14" height="9"/>
+ </objectgroup>
+</map>

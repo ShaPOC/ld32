@@ -14,6 +14,7 @@
   "globals": {
     "game": false,
     "window": false,
-    "Phaser": false
+    "Phaser": false,
+    "p2": false
   }
 }

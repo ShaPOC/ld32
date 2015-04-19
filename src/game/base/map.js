@@ -2,8 +2,7 @@
  *  [[GAME_TITLE]]
  *  [[GAME_DESCRIPTION]]
  *
- *  The menu state is, as one would expect, the main menu as
- *  seen by the user when the game has completed loading.
+ *  This is the BaseClass for every map spawned by a state.
  *
  *  Phaser version 2.3.0 "Tarabon"
  *  --------------------------------------------------------
@@ -16,15 +15,3 @@
 
 'use strict';
 
-module.exports = {
-
-    preload: function(){
-
-    },
-    create: function(){
-        //This is just like any other Phaser create function
-    },
-    update: function(){
-        //Game logic goes here
-    }
-};

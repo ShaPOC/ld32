@@ -102,8 +102,29 @@ module.exports = function(grunt) {
                 },
                 {
                     expand: true,
+                    flatten: true,
+                    src: ['node_modules/phaser-tiled/dist/phaser-tiled.js'],
+                    dest: 'dist/lib',
+                    filter: 'isFile'
+                },
+                {
+                    expand: true,
+                    flatten: true,
+                    src: ['vendor/lib/*'],
+                    dest: 'dist/lib',
+                    filter: 'isFile'
+                },
+                {
+                    expand: true,
+                    flatten: true,
+                    src: ['node_modules/phaser-tiled/**/node-zlib.js.map'],
+                    dest: 'dist/lib',
+                    filter: 'isFile'
+                },
+                {
+                    expand: true,
                     cwd: "src/resources",
-                    src: ['**/*'],
+                    src: ['**/*', '!**/*.tps', '!**/seperated/**'],
                     dest: 'dist/resources',
                     mode: 755
                 },
@@ -168,8 +189,8 @@ module.exports = function(grunt) {
             livereload: true
         },
         all: {
-            files: ['src/**/*.js', 'src/**/*.html', 'src/**/*.css'],
-            tasks: ['test','build']
+            files: ['src/**/*.js', 'src/**/*.html', 'src/**/*.css', 'src/**/*.json'],
+            tasks: ['build']
         }
     };
 
