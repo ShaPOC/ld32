@@ -27,8 +27,6 @@ var tiled = new (require("../base/tiled.js"))();
 
 var map = function(mapname) {
 
-    console.log(mapname);
-
     // By using the built-in cache key creator, the phaser-tiled plugin can
     // automagically find all the necessary items in the cache
     var cacheKey = Phaser.Plugin.Tiled.utils.cacheKey;

@@ -296,7 +296,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":21,"h":30},
 	"sourceSize": {"w":21,"h":30}
 },
-"slide01.png":
+"dash01.png":
 {
 	"frame": {"x":2,"y":31,"w":30,"h":23},
 	"rotated": false,
@@ -304,7 +304,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":23},
 	"sourceSize": {"w":30,"h":23}
 },
-"slide02.png":
+"dash02.png":
 {
 	"frame": {"x":2,"y":56,"w":30,"h":23},
 	"rotated": false,
@@ -312,7 +312,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":23},
 	"sourceSize": {"w":30,"h":23}
 },
-"slide03.png":
+"dash03.png":
 {
 	"frame": {"x":107,"y":2,"w":30,"h":23},
 	"rotated": false,

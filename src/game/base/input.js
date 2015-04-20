@@ -18,6 +18,10 @@
 
 'use strict';
 
+// Require the node util module
+var util = require('util'),
+    EventEmitter = require('events').EventEmitter;
+
 /*
  |--------------------------------------------------------------------------
  | "Constructor" for object
@@ -25,6 +29,56 @@
  */
 
 var input = function() {
+
+    this.available = {
+        "left" : [
+
+        ],
+        "right" : [
+
+        ],
+        "up" : [
+
+        ],
+        "down" : [
+
+        ],
+        "attack" : [
+
+        ],
+        "jump" : [
+
+        ],
+        "dash" : [
+
+        ]
+    };
+};
+// Inherit the eventemitter super class
+util.inherits(input, EventEmitter);
+
+/*
+ |--------------------------------------------------------------------------
+ |
+ |--------------------------------------------------------------------------\
+ |
+ |
+ */
+
+input.prototype.onDown = function() {
+
+
+};
+
+/*
+ |--------------------------------------------------------------------------
+ |
+ |--------------------------------------------------------------------------\
+ |
+ |
+ */
+
+input.prototype.onUp = function() {
 
 
 };
@@ -41,5 +95,6 @@ input.prototype.onPressed = function() {
 
 
 };
+
 // Export the prototype object
 module.exports = input;
