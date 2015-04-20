@@ -25,54 +25,40 @@ var player,
     touchingWall = false,
     wallJumping = false,
     wallSliding = false,
+    attacking = false,
+    sliding = false,
+    slideTimer = 0,
     previousLocation = null,
-    map,
-    tiled = new (require("../base/tiled.js"))();
-
+    cameraPos = new Phaser.Point(0, 0);
 
 module.exports = {
 
     preload: function(){
 
-        // By using the built-in cache key creator, the phaser-tiled plugin can
-        // automagically find all the necessary items in the cache
-        var cacheKey = Phaser.Plugin.Tiled.utils.cacheKey;
-
-        // Load up the texturepacker spritesheet and atlas
-        game.load.atlasJSONHash('player', 'resources/player/player.png', 'resources/player/player.json');
-
-        // load the tiled map, notice it is "tiledmap" and not "tilemap"
-        game.load.tiledmap(cacheKey('airu_ruins', 'tiledmap'), 'resources/maps/airu_ruins.json', null, Phaser.Tilemap.TILED_JSON);
-
-        // load the images for your tilesets, make sure the last param to "cacheKey" is
-        // the name of the tileset in your map so the plugin can find it later
-        game.load.image(cacheKey('airu_ruins', 'tileset', 'Tiles'), 'resources/maps/airu_ruins.png');
+        this.player = new (require("../gameobjects/player.js"))();
+        this.map = new (require("../maps/airu_ruins.js"))();
     },
 
     create: function(){
 
         // Start the default Phaser Physics engine (we don't need box2d in this case)
         game.physics.startSystem(Phaser.Physics.P2JS);
-        // And a default background color
-        game.stage.backgroundColor = '#2d2d2d';
 
-        // add the tiledmap to the game
-        // this method takes the key for the tiledmap which has been used in the cacheKey calls
-        // earlier, and an optional group to add the tilemap to (defaults to game.world).
-        map = game.add.tiledmap('airu_ruins');
-        // Set the collidable layer
-        game.physics.p2.convertTiledCollisionObjects(map, 'Collision');
+        // Trigger the map creation
+        this.map.create();
 
         // Set the gravity
         game.physics.p2.restitution = 0;
         game.physics.p2.gravity.y = 800;
 
-        // Get the map location for the player
-        var playerSpawnObject = tiled.findObjectsByType('PlayerStart', map, 'Objects');
+        this.map.onDeathLocationOverlap(this.playerDeath);
+        this.map.onWallJumpOverlap(this.wallContactBegin, this.wallContactEnd);
 
+        // Get the map location for the player
+        var playerSpawnObject = this.map.getPlayerStart();
         player = game.add.sprite(playerSpawnObject[0].x, playerSpawnObject[0].y, 'player');
 
-        player.anchor.setTo(1,1);
+        player.anchor.setTo(1,0);
         // add animation phases
         player.animations.add('idle', [
             'idle01.png',
@@ -94,7 +80,33 @@ module.exports = {
 
         player.animations.add('jump', [
             'jump01.png'
-        ], 8, true);
+        ], 8, false);
+
+        player.animations.add('punch', [
+            'punch_hard01.png',
+            'punch_hard02.png',
+            'punch_hard03.png',
+            'punch_hard04.png',
+            'punch_hard05.png',
+            'punch_hard06.png'
+        ], 16, false);
+
+        player.animations.add('punch_jump', [
+            'punch_jump01.png',
+            'punch_jump02.png',
+            'punch_jump03.png',
+            'punch_jump04.png',
+            'punch_jump05.png',
+            'punch_jump06.png'
+        ], 16, false);
+
+        player.animations.add('slide', [
+            'slide01.png',
+            'slide02.png',
+            'slide03.png',
+            'slide02.png',
+            'slide01.png'
+        ], 24, false);
 
         player.animations.add('walljump', [
             'walljump01.png'
@@ -104,27 +116,20 @@ module.exports = {
             'fall01.png',
             'fall02.png',
             'fall03.png'
-        ], 8, false);
+        ], 8, true);
 
         game.physics.p2.enable(player);
 
         player.body.fixedRotation = true;
 
-        var walljumpbodies = map.getObjectlayer('Collision').bodies;
-
-        for (var i = 0; i < walljumpbodies.length; ++i) {
-            if(walljumpbodies[i].tiledObject.type === "walljump") {
-                walljumpbodies[i].onBeginContact.add(this.wallContactBegin);
-                walljumpbodies[i].onEndContact.add(this.wallContactEnd);
-            }
-        }
-
         // play animation
         player.animations.play('idle');
 
-        game.physics.enable(player);
+        // I'm not using the default camera follow because I want it smoothened
+        // So set the camera to the player
+        cameraPos.setTo(player.x, player.y);
 
-        game.camera.follow(player);
+        game.physics.enable(player);
 
         // Set the first velocity
         previousLocation = {
@@ -136,14 +141,72 @@ module.exports = {
 
         var jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         jumpButton.onDown.add(this.jumpButtonPressed, this);
+
+        var slideButton = game.input.keyboard.addKey(Phaser.Keyboard.Z);
+        slideButton.onDown.add(this.slideButtonPressed, this);
+
+        var attackButton = game.input.keyboard.addKey(Phaser.Keyboard.X);
+        attackButton.onDown.add(this.attackButtonPressed, this);
+
+        player.events.onAnimationComplete.add(this.playerAnimationComplete, this);
     },
 
-    wallContactBegin: function(wall){ touchingWall = wall.data.id; },
+    playerAnimationComplete: function() {
+        if(player.animations.currentAnim.name === "punch" || player.animations.currentAnim.name === "punch_jump") {
+            attacking = false;
+        }
+        if(player.animations.currentAnim.name === "slide") {
+            sliding = false;
+        }
+    },
 
-    wallContactEnd: function(){ touchingWall = false; },
+    wallContactBegin: function(wall){ if(touchingWall !== wall.data.id) { wallJumping = false; } touchingWall = wall.data.id; },
+
+    wallContactEnd: function(){ touchingWall = false; wallSliding = false; },
 
     spriteOrientation: function(orientation){
-        player.scale.x = orientation; //facing orientation direction
+        player.scale.x = orientation; //facing ori entation direction
+    },
+
+    attackButtonPressed: function() {
+        if(!attacking && !sliding) {
+            attacking = true;
+            if(!this.checkIfCanJump()) {
+                player.animations.play("punch_jump");
+            } else {
+                player.animations.play("punch");
+            }
+        }
+    },
+
+    slideButtonPressed: function() {
+
+        var sliding_speed = 300;
+
+        if(!sliding && !attacking && game.time.now > slideTimer) {
+
+            slideTimer = game.time.now + 750;
+            sliding = true;
+            player.animations.play("slide");
+
+            if( cursors.left.isDown ) {
+                player.body.velocity.x = -sliding_speed;
+            }
+            if( cursors.right.isDown ) {
+                player.body.velocity.x = sliding_speed;
+            }
+            if( cursors.up.isDown ) {
+                player.body.velocity.y = -sliding_speed / 1.2;
+            }
+
+            if(!cursors.left.isDown && !cursors.right.isDown && !cursors.up.isDown) {
+                if(player.scale.x > 0) {
+                    player.body.velocity.x = sliding_speed;
+                } else {
+                    player.body.velocity.x = -sliding_speed;
+                }
+            }
+        }
     },
 
     jumpButtonPressed: function() {
@@ -167,59 +230,80 @@ module.exports = {
         // Reset wallsliding
         wallSliding = false;
 
-        if (cursors.left.isDown)
+        if (cursors.left.isDown && !sliding && (!attacking || (attacking && !this.checkIfCanJump())))
         {
             this.playerMove(-1);
 
-            // If the player is falling
-            if (this.checkIfCanJump()) {
-                wallJumping = false;
-                player.animations.play('run');
-            } else if(touchingWall && parseFloat(player.body.y).toFixed(2) > previousLocation.y) {
-                if(!wallJumping){
-                    player.body.velocity.y = 0;
+            if(!attacking) {
+                // If the player is falling
+                if (this.checkIfCanJump()) {
+                    wallJumping = false;
+                    player.animations.play('run');
+                } else if (touchingWall && parseFloat(player.body.y).toFixed(2) > previousLocation.y) {
+                    if (!wallJumping) {
+                        player.body.velocity.y = 0;
+                    }
+                    player.animations.play('walljump');
+                    wallSliding = true;
+                } else {
+                    player.animations.play('fall');
                 }
-                player.animations.play('walljump');
-                wallSliding = true;
-            } else {
-                player.animations.play('fall');
             }
 
             this.spriteOrientation(-1);
         }
-        else if (cursors.right.isDown) {
+        else if (cursors.right.isDown && !sliding && (!attacking || (attacking && !this.checkIfCanJump()))) {
 
             this.playerMove(1);
 
-            // If the player is falling
-            if (this.checkIfCanJump()) {
-                wallJumping = false;
-                player.animations.play('run');
-            } else if(touchingWall && parseFloat(player.body.y).toFixed(2) > previousLocation.y) {
-                if(!wallJumping) {
-                    player.body.velocity.y = 0;
+            if(!attacking) {
+                // If the player is falling
+                if (this.checkIfCanJump()) {
+                    wallJumping = false;
+                    player.animations.play('run');
+                } else if (touchingWall && parseFloat(player.body.y).toFixed(2) > previousLocation.y) {
+                    if (!wallJumping) {
+                        player.body.velocity.y = 0;
+                    }
+                    player.animations.play('walljump');
+                    wallSliding = true;
+                } else {
+                    player.animations.play('fall');
                 }
-                player.animations.play('walljump');
-                wallSliding = true;
-            } else {
-                player.animations.play('fall');
             }
 
             this.spriteOrientation(1);
         }
         else
         {
-            // If the player is falling
-            if (!this.checkIfCanJump()) {
-                player.animations.play('fall');
-            } else {
-                player.animations.play('idle');
-                wallJumping = false;
+            if(!attacking && !sliding) {
+                // If the player is falling
+                if (!this.checkIfCanJump()) {
+                    player.animations.play('fall');
+                } else {
+                    player.animations.play('idle');
+                    wallJumping = false;
+                }
             }
-            if(!wallJumping) {
-                player.body.velocity.x = 0;
+            if(!wallJumping && !sliding) {
+
+                player.body.velocity.x -= (player.body.velocity.x < 0) ? 10 : -10;
+                if( player.body.velocity.x < 10 || player.body.velocity.x > -10) {
+                    player.body.velocity.x = 0;
+                }
             }
         }
+
+        // Camera properties
+        // the amount of damping, lower values = smoother camera movement
+        var lerp = 0.1;
+        cameraPos.x += (player.x - cameraPos.x) * lerp;
+        cameraPos.y += (player.y - cameraPos.y) * lerp;
+
+        game.camera.focusOnXY(cameraPos.x, cameraPos.y);
+
+        // Update the map (mostly for parallax purposes)
+        this.map.update();
 
         // Set the first velocity
         previousLocation = {
@@ -243,6 +327,9 @@ module.exports = {
 
     playerWallJump: function(orientation){
 
+        // Disable sliding for a short while to prevent cheating!
+        slideTimer = game.time.now + 750;
+
         wallJumping = true;
         player.body.moveUp(300);
         player.body.velocity.x = 300 * orientation;
@@ -252,13 +339,21 @@ module.exports = {
     playerJump: function() {
 
         wallJumping = false;
-
+        sliding = false;
         player.animations.play('jump');
-        player.animations.stop();
-        player.frame = 1;
+
+        if(attacking) {
+            player.animations.play("punch_jump");
+        }
 
         player.body.moveUp(300);
-        jumpTimer = game.time.now + 750;
+        jumpTimer = game.time.now + 250;
+    },
+
+    playerDeath: function() {
+
+        console.log("Death");
+        game.state.restart();
     },
 
     checkIfCanJump: function() {

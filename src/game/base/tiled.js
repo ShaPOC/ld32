@@ -2,9 +2,9 @@
  *  [[GAME_TITLE]]
  *  [[GAME_DESCRIPTION]]
  *
- *  The boot state loads the most essential stuff including
- *  the loading screen and when done, it starts the loading
- *  screen which loads the rest.
+ *  The tiled object brings some utilities to the game which
+ *  allows it to read some specific information from the
+ *  export of the tiled map generator.
  *
  *  Phaser version 2.3.0 "Tarabon"
  *  --------------------------------------------------------
@@ -44,7 +44,7 @@ tiled.prototype.findObjectsByType = function(type, map, layer, array) {
 
         if(objectlayer.name === layer) {
             objectlayer[array].forEach(function(element){
-                if(element.type === type || element.tiledObject.type === type) {
+                if(element.type === type) {
                     //Phaser uses top left, Tiled bottom left so we have to adjust the y position
                     //also keep in mind that the cup images are a bit smaller than the tile which is 16x16
                     //so they might not be placed in the exact pixel position as in Tiled
