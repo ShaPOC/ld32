@@ -39,6 +39,26 @@ ui.prototype.create = function() {
 
 /*
  |--------------------------------------------------------------------------
+ | Create the UI - called when the state starts
+ |--------------------------------------------------------------------------\
+ */
+ui.prototype.setHearts = function(current, max) {
+
+    var i = 0;
+
+    for(i; i < current; ++i) {
+        game.add.sprite(5 + (i * 15), 5, 'ui', 'heart_full.png').fixedToCamera = true;
+    }
+
+    if(i < max) {
+        for(i; i < max; ++i) {
+            game.add.sprite(5 + (i * 15), 5, 'ui', 'heart_empty.png').fixedToCamera = true;
+        }
+    }
+};
+
+/*
+ |--------------------------------------------------------------------------
  | The update function, triggered every tick
  |--------------------------------------------------------------------------\
  */

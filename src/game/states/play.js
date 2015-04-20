@@ -25,9 +25,9 @@ module.exports = {
 
     preload: function(){
 
-        this.player = new (require("../gameobjects/player.js"))();
-        this.map = new (require("../maps/airu_ruins.js"))( this.player );
         this.ui = new (require("../base/ui.js"))();
+        this.player = new (require("../gameobjects/player.js"))( this.ui );
+        this.map = new (require("../maps/airu_ruins.js"))( this.player );
     },
 
     create: function(){

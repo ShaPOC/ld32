@@ -62,7 +62,6 @@ stonehead.prototype.spawn = function(location, orientation) {
     // Set the shape
     this.object.body.clearShapes();
     this.object.body.addRectangle(20, 42);
-    //this.object.body.debug = true;
 
     this.object.body.mass = 6;
 
@@ -79,6 +78,10 @@ stonehead.prototype.spawn = function(location, orientation) {
     });
     this.object.events.onAnimationLoop.add(function(){
         these.animationComplete();
+    });
+
+    this.object.body.onBeginContact.add(function(details){
+        these.hitCheck(details);
     });
 };
 
@@ -114,7 +117,18 @@ stonehead.prototype.addAnimations = function() {
         'stonehead_activate05.png',
         'stonehead_activate06.png',
         'stonehead_activate07.png'
-    ], 12, false);
+    ], 16, false);
+
+    // add animation phases
+    this.object.animations.add('deactivate', [
+        'stonehead_activate07.png',
+        'stonehead_activate06.png',
+        'stonehead_activate05.png',
+        'stonehead_activate04.png',
+        'stonehead_activate03.png',
+        'stonehead_activate02.png',
+        'stonehead_activate01.png'
+    ], 16, false);
 
     // add animation phases
     this.object.animations.add('move', [
@@ -123,7 +137,7 @@ stonehead.prototype.addAnimations = function() {
         'stonehead_move03.png',
         'stonehead_move04.png',
         'stonehead_move05.png'
-    ], 12, false);
+    ], 12, true);
 
     // add animation phases
     this.object.animations.add('death', [
@@ -134,6 +148,11 @@ stonehead.prototype.addAnimations = function() {
     ], 8, false);
 };
 
+/*
+ |--------------------------------------------------------------------------
+ | Activate and deactivate
+ |--------------------------------------------------------------------------
+ */
 stonehead.prototype.activate = function() {
 
     // Set to active
@@ -141,6 +160,38 @@ stonehead.prototype.activate = function() {
     this.waking = true;
 
     this.object.animations.play("activate");
+};
+
+stonehead.prototype.deactivate = function() {
+
+    // Set to active
+    this.active = false;
+    this.waking = false;
+
+    this.object.animations.play("deactivate");
+};
+
+/*
+ |--------------------------------------------------------------------------
+ | Hit check
+ |--------------------------------------------------------------------------
+ */
+
+stonehead.prototype.hitCheck = function(details) {
+
+    if(this.active && !this.waking && details.sprite != null) {
+
+        if(details.sprite.name === "windforce") {
+
+            this.wakeTimer = game.time.now + wakeCheckTime * 3;
+            this.deactivate();
+        }
+
+        if(details.sprite.key === "player") {
+
+            this.player.takeDamage(1);
+        }
+    }
 };
 
 /*
@@ -160,9 +211,9 @@ stonehead.prototype.update = function() {
             if( Phaser.Rectangle.contains(
                 new Phaser.Rectangle(
                     this.object.x - 100,
-                    this.object.y,
+                    this.object.y - 50,
                     200,
-                    80
+                    100
                 ),
                 this.player.object.x,
                 this.player.object.y
@@ -175,10 +226,29 @@ stonehead.prototype.update = function() {
 
         if(!this.waking) {
 
+            this.object.animations.play("move");
 
+            if(this.player.object.x > this.object.x) {
+                this.object.body.velocity.x = 60;
+                this.object.scale.x = -1;
+            } else {
+                this.object.body.velocity.x = -60;
+                this.object.scale.x = 1;
+            }
         }
 
-        
+        if( !Phaser.Rectangle.contains(
+            new Phaser.Rectangle(
+                this.object.x - 100,
+                this.object.y - 50,
+                200,
+                100
+            ),
+            this.player.object.x,
+            this.player.object.y
+        ) ) {
+            this.deactivate();
+        }
     }
 };
 

@@ -24,12 +24,14 @@ var cursors;
  |--------------------------------------------------------------------------
  */
 
-var player = function() {
+var player = function(ui) {
 
     // Load up the texturepacker spritesheet and atlas
     game.load.atlasJSONHash('player', 'resources/player/player.png', 'resources/player/player.json');
     // Load up the effects as well
     game.load.atlasJSONHash('effects', 'resources/effects/effects.png', 'resources/effects/effects.json');
+
+    this.ui = ui;
 
     // Set default options
     this.maxHealth = 5;
@@ -53,6 +55,8 @@ player.prototype.create = function(input, state ,playerstart) {
     this.spinkickTimer = 0;
     // The player health
     this.health = this.maxHealth;
+    // Set the hearts in the ui
+    this.ui.setHearts(this.health, this.maxHealth);
 
     this.object.touchingWall = false;
     this.object.wallJumping = false;
@@ -65,6 +69,9 @@ player.prototype.create = function(input, state ,playerstart) {
 
     // create capguy sprite
     this.windforce = game.add.sprite(-100, 0, 'effects', 'wind_gust01.png');
+
+    // Set the name so we can catch it later
+    this.windforce.name = "windforce";
 
     // add animation phases
     this.windforce.animations.add('blow', [
@@ -302,16 +309,20 @@ player.prototype.spriteOrientation = function(orientation){
 
 player.prototype.wallContactBegin = function(wall){
 
-    if(wall.sprite.touchingWall !== wall.data.id) {
-        wall.sprite.wallJumping = false;
+    if(wall.sprite) {
+        if(wall.sprite.touchingWall !== wall.data.id) {
+            wall.sprite.wallJumping = false;
+        }
+        wall.sprite.touchingWall = wall.data.id;
     }
-    wall.sprite.touchingWall = wall.data.id;
 };
 
 player.prototype.wallContactEnd = function(wall){
 
-    wall.sprite.touchingWall = false;
-    wall.sprite.wallSliding = false;
+    if(wall.sprite) {
+        wall.sprite.touchingWall = false;
+        wall.sprite.wallSliding = false;
+    }
 
 };
 
@@ -486,6 +497,31 @@ player.prototype.spawnWindGust = function() {
 
 /*
  |--------------------------------------------------------------------------
+ | Take damage
+ |--------------------------------------------------------------------------
+ */
+player.prototype.takeDamage = function(amount) {
+
+    if(this.object.scale.x > 0) {
+        this.object.body.x -= 30;
+        this.object.body.velocity.y = -100;
+    } else {
+        this.object.body.x += 30;
+        this.object.body.velocity.y = -100;
+    }
+
+    this.health -= amount;
+
+    if(this.health <= 0) {
+        this.die();
+    }
+
+    // Set the hearts in the ui
+    this.ui.setHearts(this.health, this.maxHealth);
+};
+
+/*
+ |--------------------------------------------------------------------------
  | The update function, triggered every tick
  |--------------------------------------------------------------------------
  */
@@ -573,7 +609,7 @@ player.prototype.update = function() {
  */
 player.prototype.die = function() {
 
-    console.log("You died");
+    game.state.restart();
 };
 
 // Export the prototype object
