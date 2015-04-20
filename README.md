@@ -1,6 +1,10 @@
 # LD32 [![Build Status][travis-image]][travis-url]
 
 My Ludum Dare 32 game made with Phaser.io
+You can play it here; http://iamlimitless.nl/ld/32/
+
+It was my first attempt at using Phaser.io and coded within 48 hours, therefore it's far from finished.
+Still, the mechanics are nice and I see myself finishing this in the future. 
 
 ## BEWARE ##
 _RESOURCES ARE MISSING_
