@@ -89,35 +89,7 @@ module.exports = function(grunt) {
                 {
                     expand: true,
                     flatten: true,
-                    src: ['node_modules/phaser/dist/phaser.min.js'],
-                    dest: 'dist/lib',
-                    filter: 'isFile'
-                },
-                {
-                    expand: true,
-                    flatten: true,
-                    src: ['node_modules/phaser/dist/phaser.map'],
-                    dest: 'dist/lib',
-                    filter: 'isFile'
-                },
-                {
-                    expand: true,
-                    flatten: true,
-                    src: ['node_modules/phaser-tiled/dist/phaser-tiled.js'],
-                    dest: 'dist/lib',
-                    filter: 'isFile'
-                },
-                {
-                    expand: true,
-                    flatten: true,
                     src: ['vendor/lib/*'],
-                    dest: 'dist/lib',
-                    filter: 'isFile'
-                },
-                {
-                    expand: true,
-                    flatten: true,
-                    src: ['node_modules/phaser-tiled/**/node-zlib.js.map'],
                     dest: 'dist/lib',
                     filter: 'isFile'
                 },

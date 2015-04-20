@@ -23,6 +23,18 @@
 
 var ui = function() {
 
+    // Load up the texturepacker spritesheet and atlas
+    game.load.atlasJSONHash('ui', 'resources/ui/ui.png', 'resources/ui/ui.json');
+};
+
+/*
+ |--------------------------------------------------------------------------
+ | Create the UI - called when the state starts
+ |--------------------------------------------------------------------------\
+ */
+ui.prototype.create = function() {
+
+
 };
 
 /*
@@ -35,17 +47,5 @@ ui.prototype.update = function() {
 
 };
 
-/*
- |--------------------------------------------------------------------------
- |
- |--------------------------------------------------------------------------\
- |
- |
- */
-
-ui.prototype.insertSprites = function() {
-
-
-};
 // Export the prototype object
 module.exports = ui;

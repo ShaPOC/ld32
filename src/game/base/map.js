@@ -25,7 +25,10 @@ var tiled = new (require("../base/tiled.js"))();
  |--------------------------------------------------------------------------
  */
 
-var map = function(mapname) {
+var map = function( mapname , player ) {
+
+    // Set the mapname in the object for later use
+    this.mapname = mapname;
 
     // By using the built-in cache key creator, the phaser-tiled plugin can
     // automagically find all the necessary items in the cache
@@ -37,6 +40,9 @@ var map = function(mapname) {
     // load the images for your tilesets, make sure the last param to "cacheKey" is
     // the name of the tileset in your map so the plugin can find it later
     game.load.image(cacheKey(mapname, 'tileset', 'Tiles'), 'resources/maps/' + mapname + '.png');
+
+    // Create the enemies object so all enemy sprites get loaded beforehand
+    this.enemies = new (require("../base/enemies.js"))( player );
 };
 
 /*
@@ -49,12 +55,14 @@ map.prototype.create = function() {
     // add the tiledmap to the game
     // this method takes the key for the tiledmap which has been used in the cacheKey calls
     // earlier, and an optional group to add the tilemap to (defaults to game.world).
-    this.tilemap = game.add.tiledmap('airu_ruins');
-
+    this.tilemap = game.add.tiledmap(this.mapname);
     // Set the collidable layer
-    game.physics.p2.convertTiledCollisionObjects(this.tilemap, 'Collision');
-    // Set the overlap layer
-    game.physics.p2.convertTiledCollisionObjects(this.tilemap, 'Overlap');
+    game.physics.p2.convertTiledCollisionObjects(this.tilemap);
+
+    var spawnlocations = tiled.findObjectsByPartialType('spawn_', this.tilemap, 'Objects');
+    for(var i = 0; i < spawnlocations.length; ++i) {
+        this.enemies.spawn( spawnlocations[i]["type"].replace("spawn_", "") , { x:spawnlocations[i].x, y:spawnlocations[i].y }, spawnlocations[i].properties );
+    }
 };
 
 /*
@@ -64,7 +72,7 @@ map.prototype.create = function() {
  */
 map.prototype.onDeathLocationOverlap = function(trigger_function) {
 
-    var x = this.tilemap.getObjectlayer('Overlap').bodies;
+    var x = this.tilemap.getObjectlayer('Collision').bodies;
 
     for (var i = 0; i < x.length; ++i) {
         // Set as overlap only
@@ -100,6 +108,17 @@ map.prototype.onWallJumpOverlap = function(begin, end) {
 map.prototype.getPlayerStart = function() {
 
     return tiled.findObjectsByType('PlayerStart', this.tilemap, 'Objects');
+};
+
+/*
+ |--------------------------------------------------------------------------
+ | The update function, triggered every tick
+ |--------------------------------------------------------------------------
+ */
+map.prototype.update = function() {
+
+    // Update enemies
+    this.enemies.update();
 };
 
 // Export the prototype object

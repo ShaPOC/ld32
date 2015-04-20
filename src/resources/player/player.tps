@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>3</int>
         <key>texturePackerVersion</key>
-        <string>3.6.0</string>
+        <string>3.7.1</string>
         <key>fileName</key>
         <string>/Users/Jimmy/PhpstormProjects/ld32/src/resources/player/player.tps</string>
         <key>autoSDSettings</key>
@@ -38,7 +38,7 @@
         <key>dataFormat</key>
         <string>phaser-json-hash</string>
         <key>textureFileName</key>
-        <filename>player.png</filename>
+        <filename></filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -74,7 +74,7 @@
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
-        <uint>7</uint>
+        <uint>1</uint>
         <key>webpQualityLevel</key>
         <uint>101</uint>
         <key>textureSubPath</key>
@@ -86,9 +86,9 @@
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
-            <int>1024</int>
+            <int>2048</int>
             <key>height</key>
-            <int>1024</int>
+            <int>2048</int>
         </QSize>
         <key>fixedTextureSize</key>
         <QSize>
@@ -106,7 +106,7 @@
             <key>freeSizeMode</key>
             <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
             <key>sizeConstraints</key>
-            <enum type="AlgorithmSettings::SizeConstraints">POT</enum>
+            <enum type="AlgorithmSettings::SizeConstraints">AnySize</enum>
             <key>forceSquared</key>
             <false/>
             <key>forceWordAligned</key>
@@ -119,7 +119,7 @@
             <key>basic</key>
             <struct type="AlgorithmBasicSettings">
                 <key>sortBy</key>
-                <enum type="AlgorithmBasicSettings::SortBy">Circumference</enum>
+                <enum type="AlgorithmBasicSettings::SortBy">Best</enum>
                 <key>order</key>
                 <enum type="AlgorithmBasicSettings::Order">Ascending</enum>
             </struct>
@@ -180,7 +180,7 @@
             <key>trimThreshold</key>
             <uint>1</uint>
             <key>trimMode</key>
-            <enum type="SpriteSettings::TrimMode">Trim</enum>
+            <enum type="SpriteSettings::TrimMode">Crop</enum>
             <key>heuristicMask</key>
             <false/>
             <key>pivotPoint</key>
@@ -188,52 +188,52 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>Seperated/death01.png</filename>
-            <filename>Seperated/death02.png</filename>
-            <filename>Seperated/death03.png</filename>
-            <filename>Seperated/fall01.png</filename>
-            <filename>Seperated/fall02.png</filename>
-            <filename>Seperated/fall03.png</filename>
-            <filename>Seperated/hit01.png</filename>
-            <filename>Seperated/idle01.png</filename>
-            <filename>Seperated/idle02.png</filename>
-            <filename>Seperated/idle03.png</filename>
-            <filename>Seperated/idle04.png</filename>
-            <filename>Seperated/jump01.png</filename>
-            <filename>Seperated/punch_hard01.png</filename>
-            <filename>Seperated/punch_hard02.png</filename>
-            <filename>Seperated/punch_hard03.png</filename>
-            <filename>Seperated/punch_hard04.png</filename>
-            <filename>Seperated/punch_hard05.png</filename>
-            <filename>Seperated/punch_hard06.png</filename>
-            <filename>Seperated/punch_jump01.png</filename>
-            <filename>Seperated/punch_jump02.png</filename>
-            <filename>Seperated/punch_jump03.png</filename>
-            <filename>Seperated/punch_jump04.png</filename>
-            <filename>Seperated/punch_jump05.png</filename>
-            <filename>Seperated/punch_jump06.png</filename>
-            <filename>Seperated/punch01.png</filename>
-            <filename>Seperated/punch02.png</filename>
-            <filename>Seperated/punch03.png</filename>
-            <filename>Seperated/punch04.png</filename>
-            <filename>Seperated/punch05.png</filename>
-            <filename>Seperated/run01.png</filename>
-            <filename>Seperated/run02.png</filename>
-            <filename>Seperated/run03.png</filename>
-            <filename>Seperated/run04.png</filename>
-            <filename>Seperated/run05.png</filename>
-            <filename>Seperated/run06.png</filename>
-            <filename>Seperated/run07.png</filename>
-            <filename>Seperated/run08.png</filename>
-            <filename>Seperated/slide01.png</filename>
-            <filename>Seperated/slide02.png</filename>
-            <filename>Seperated/slide03.png</filename>
-            <filename>Seperated/spinkick01.png</filename>
-            <filename>Seperated/spinkick02.png</filename>
-            <filename>Seperated/spinkick03.png</filename>
-            <filename>Seperated/spinkick04.png</filename>
-            <filename>Seperated/spinkick05.png</filename>
-            <filename>Seperated/walljump01.png</filename>
+            <filename>seperated/dash01.png</filename>
+            <filename>seperated/dash02.png</filename>
+            <filename>seperated/dash03.png</filename>
+            <filename>seperated/death01.png</filename>
+            <filename>seperated/death02.png</filename>
+            <filename>seperated/death03.png</filename>
+            <filename>seperated/fall01.png</filename>
+            <filename>seperated/fall02.png</filename>
+            <filename>seperated/fall03.png</filename>
+            <filename>seperated/hit01.png</filename>
+            <filename>seperated/idle01.png</filename>
+            <filename>seperated/idle02.png</filename>
+            <filename>seperated/idle03.png</filename>
+            <filename>seperated/idle04.png</filename>
+            <filename>seperated/jump01.png</filename>
+            <filename>seperated/punch_hard01.png</filename>
+            <filename>seperated/punch_hard02.png</filename>
+            <filename>seperated/punch_hard03.png</filename>
+            <filename>seperated/punch_hard04.png</filename>
+            <filename>seperated/punch_hard05.png</filename>
+            <filename>seperated/punch_hard06.png</filename>
+            <filename>seperated/punch_jump01.png</filename>
+            <filename>seperated/punch_jump02.png</filename>
+            <filename>seperated/punch_jump03.png</filename>
+            <filename>seperated/punch_jump04.png</filename>
+            <filename>seperated/punch_jump05.png</filename>
+            <filename>seperated/punch_jump06.png</filename>
+            <filename>seperated/punch01.png</filename>
+            <filename>seperated/punch02.png</filename>
+            <filename>seperated/punch03.png</filename>
+            <filename>seperated/punch04.png</filename>
+            <filename>seperated/punch05.png</filename>
+            <filename>seperated/run01.png</filename>
+            <filename>seperated/run02.png</filename>
+            <filename>seperated/run03.png</filename>
+            <filename>seperated/run04.png</filename>
+            <filename>seperated/run05.png</filename>
+            <filename>seperated/run06.png</filename>
+            <filename>seperated/run07.png</filename>
+            <filename>seperated/run08.png</filename>
+            <filename>seperated/spinkick01.png</filename>
+            <filename>seperated/spinkick02.png</filename>
+            <filename>seperated/spinkick03.png</filename>
+            <filename>seperated/spinkick04.png</filename>
+            <filename>seperated/spinkick05.png</filename>
+            <filename>seperated/walljump01.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
@@ -242,8 +242,18 @@
         <key>ignoredWarnings</key>
         <array/>
         <key>commonDivisorX</key>
-        <uint>1</uint>
+        <uint>4</uint>
         <key>commonDivisorY</key>
-        <uint>1</uint>
+        <uint>8</uint>
+        <key>packNormalMaps</key>
+        <false/>
+        <key>autodetectNormalMaps</key>
+        <true/>
+        <key>normalMapFilter</key>
+        <string></string>
+        <key>normalMapSuffix</key>
+        <string></string>
+        <key>normalMapSheetFileName</key>
+        <filename></filename>
     </struct>
 </data>

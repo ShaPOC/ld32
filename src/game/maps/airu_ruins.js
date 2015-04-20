@@ -22,10 +22,10 @@ var map = require("../base/map.js");
  |--------------------------------------------------------------------------
  */
 
-var airu_ruins = function() {
+var airu_ruins = function(player) {
 
     // Call the parent function and insert the mapname
-    map.apply(this, ["airu_ruins"]);
+    map.apply(this, ["airu_ruins", player]);
 
     // The parralax background images
     game.load.image('background_tile01', 'resources/maps/airu_ruins_background_01.png');
@@ -67,6 +67,9 @@ airu_ruins.prototype.update = function() {
 
     this.bgtile01.tilePosition.set( game.camera.x * -0.05, game.camera.y * -0.07 );
     this.bgtile02.tilePosition.set( game.camera.x * -0.08, game.camera.y * -0.065 );
+
+    // Call the parent function
+    map.prototype.update.call(this);
 };
 
 // Export the prototype object

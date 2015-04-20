@@ -28,6 +28,11 @@ var player = function() {
 
     // Load up the texturepacker spritesheet and atlas
     game.load.atlasJSONHash('player', 'resources/player/player.png', 'resources/player/player.json');
+    // Load up the effects as well
+    game.load.atlasJSONHash('effects', 'resources/effects/effects.png', 'resources/effects/effects.json');
+
+    // Set default options
+    this.maxHealth = 5;
 };
 
 /*
@@ -45,13 +50,43 @@ player.prototype.create = function(input, state ,playerstart) {
     // Default class variables
     this.jumpTimer = 0;
     this.dashTimer = 0;
+    this.spinkickTimer = 0;
+    // The player health
+    this.health = this.maxHealth;
+
     this.object.touchingWall = false;
     this.object.wallJumping = false;
     this.object.wallSliding = false;
+    this.object.spinKicking = false;
     this.object.attacking = false;
     this.object.dashing = false;
 
     game.physics.p2.enable(this.object);
+
+    // create capguy sprite
+    this.windforce = game.add.sprite(-100, 0, 'effects', 'wind_gust01.png');
+
+    // add animation phases
+    this.windforce.animations.add('blow', [
+        'wind_gust05.png',
+        'wind_gust04.png',
+        'wind_gust03.png',
+        'wind_gust02.png',
+        'wind_gust01.png'
+    ], 30, false);
+
+    // Make sure it's strong enough
+    this.windforce.mass = 12;
+
+    game.physics.p2.enable(this.windforce);
+    // Set the anchor to the center for the body for the physics
+    this.windforce.anchor.setTo(0.5,0.5);
+
+    // Set the shape
+    this.windforce.body.clearShapes();
+    this.windforce.body.addCircle(22);
+    // Make sure it doesn't tumble over, the player can stand up
+    this.windforce.body.fixedRotation = true;
 
     // Set the first location found
     this.previousLocation = {
@@ -59,12 +94,17 @@ player.prototype.create = function(input, state ,playerstart) {
         y: parseFloat(this.object.body.y).toFixed(2)
     };
 
-    // Set the anchor to bottom left
-    this.object.anchor.setTo(0.5,0.5);
-
     this.addAnimations();
 
+    // Set the anchor to the center for the body for the physics
+    this.object.anchor.setTo(0.5,0.5);
+
+    // Make sure it doesn't tumble over, the player can stand up
     this.object.body.fixedRotation = true;
+
+    // Set the shape
+    this.object.body.clearShapes();
+    this.object.body.addRectangle(18, 28);
 
     // play the default animation
     this.object.animations.play('idle');
@@ -86,6 +126,9 @@ player.prototype.create = function(input, state ,playerstart) {
 
     var attackButton = game.input.keyboard.addKey(Phaser.Keyboard.X);
     attackButton.onDown.add(this.attack, this);
+
+    var spinkickButton = game.input.keyboard.addKey(Phaser.Keyboard.C);
+    spinkickButton.onDown.add(this.spinkick, this);
 };
 
 /*
@@ -119,13 +162,38 @@ player.prototype.addAnimations = function() {
     ], 8, false);
 
     this.object.animations.add('punch', [
+        'punch01.png',
+        'punch02.png',
+        'punch03.png',
+        'punch04.png',
+        'punch05.png',
+        'punch04.png',
+        'punch03.png',
+        'punch02.png',
+        'punch01.png',
+    ], 24, false);
+
+
+    this.object.animations.add('spinkick', [
+        'punch01.png',
+        'punch02.png',
+        'punch03.png',
+        'punch04.png',
+        'punch05.png',
+        'punch04.png',
+        'punch03.png',
+        'punch02.png',
+        'punch01.png',
+    ], 24, false);
+
+    this.object.animations.add('punch_hard', [
         'punch_hard01.png',
         'punch_hard02.png',
         'punch_hard03.png',
         'punch_hard04.png',
         'punch_hard05.png',
         'punch_hard06.png'
-    ], 16, false);
+    ], 24, false);
 
     this.object.animations.add('punch_jump', [
         'punch_jump01.png',
@@ -134,7 +202,15 @@ player.prototype.addAnimations = function() {
         'punch_jump04.png',
         'punch_jump05.png',
         'punch_jump06.png'
-    ], 16, false);
+    ], 24, false);
+
+    this.object.animations.add('spinkick', [
+        'spinkick01.png',
+        'spinkick02.png',
+        'spinkick03.png',
+        'spinkick04.png',
+        'spinkick05.png'
+    ], 24, false);
 
     this.object.animations.add('dash', [
         'dash01.png',
@@ -162,8 +238,15 @@ player.prototype.addAnimations = function() {
  */
 player.prototype.playerAnimationComplete = function() {
 
-    if(this.object.animations.currentAnim.name === "punch" || this.object.animations.currentAnim.name === "punch_jump") {
+    if(this.object.animations.currentAnim.name === "punch" || this.object.animations.currentAnim.name === "punch_hard" || this.object.animations.currentAnim.name === "punch_jump") {
         this.object.attacking = false;
+    }
+    if(this.object.animations.currentAnim.name === "spinkick") {
+        this.object.attacking = false;
+        this.object.spinKicking = false;
+        if(this.isOnTheGround()) {
+            this.spawnWindGust();
+        }
     }
     if(this.object.animations.currentAnim.name === "dash") {
         this.object.dashing = false;
@@ -207,7 +290,7 @@ player.prototype.isOnTheGround = function() {
  */
 player.prototype.spriteOrientation = function(orientation){
 
-    this.object.scale.x = orientation; //facing ori entation direction
+    this.object.scale.x = orientation; //facing orientation direction
 
 };
 
@@ -271,21 +354,22 @@ player.prototype.walljump = function(orientation){
 
 player.prototype.jump = function() {
 
-    if( this.object.wallSliding ) {
+    if (this.object.wallSliding) {
 
-        if( cursors.left.isDown ) {
+        if (cursors.left.isDown) {
             this.walljump(1);
-        } else if( cursors.right.isDown ) {
+        } else if (cursors.right.isDown) {
             this.walljump(-1);
         }
 
-    } else if(game.time.now > this.jumpTimer && this.isOnTheGround()) {
+    } else if (game.time.now > this.jumpTimer && this.isOnTheGround()) {
 
         this.object.wallJumping = false;
         this.object.dashing = false;
         this.object.animations.play('jump');
 
-        if(this.object.attacking) {
+        // We get the current attacking phase, and resume it in the air
+        if (this.object.attacking) {
             this.object.animations.play("punch_jump");
         }
 
@@ -302,13 +386,33 @@ player.prototype.jump = function() {
 
 player.prototype.attack = function() {
 
-    if(!this.object.attacking && !this.object.dashing) {
+    if (!this.object.attacking && !this.object.dashing) {
         this.object.attacking = true;
-        if(!this.isOnTheGround()) {
+        if (!this.isOnTheGround()) {
             this.object.animations.play("punch_jump");
         } else {
-            this.object.animations.play("punch");
+            this.object.animations.play("punch_hard");
         }
+    }
+};
+
+/*
+ |--------------------------------------------------------------------------
+ | Spin kick
+ |--------------------------------------------------------------------------
+ */
+
+player.prototype.spinkick = function() {
+
+    if (!this.object.attacking && !this.object.dashing && !this.isOnTheGround() && game.time.now > this.spinkickTimer) {
+
+        this.object.spinKicking = true;
+        this.object.attacking = true;
+
+        this.object.animations.play("spinkick");
+        this.object.body.velocity.y = 500;
+
+        this.spinkickTimer = game.time.now + 650;
     }
 };
 
@@ -322,31 +426,62 @@ player.prototype.dash = function() {
 
     var dashing_speed = 300;
 
-    if(!this.object.dashing && !this.object.attacking && game.time.now > this.dashTimer) {
+    if (!this.object.dashing && !this.object.attacking && game.time.now > this.dashTimer) {
 
         this.dashTimer = game.time.now + 750;
         this.object.dashing = true;
         this.object.animations.play("dash");
 
-        if( cursors.left.isDown ) {
+        if (cursors.left.isDown) {
             this.object.body.velocity.x = -dashing_speed;
         }
-        if( cursors.right.isDown ) {
+        if (cursors.right.isDown) {
             this.object.body.velocity.x = dashing_speed;
         }
-        if( cursors.up.isDown ) {
+        if (cursors.up.isDown) {
             this.object.body.velocity.y = -dashing_speed / 1.2;
         }
 
-        if(!cursors.left.isDown && !cursors.right.isDown && !cursors.up.isDown) {
+        if (!cursors.left.isDown && !cursors.right.isDown && !cursors.up.isDown) {
 
-            if(this.object.scale.x > 0) {
+            if (this.object.scale.x > 0) {
                 this.object.body.velocity.x = dashing_speed;
             } else {
                 this.object.body.velocity.x = -dashing_speed;
             }
         }
     }
+};
+
+/*
+ |--------------------------------------------------------------------------
+ | Spawn a gust of wind away from the player
+ |--------------------------------------------------------------------------
+ */
+player.prototype.spawnWindGust = function() {
+
+    this.windforce.body.y = this.object.body.y;
+
+    this.windforce.alpha = 1;
+
+    // Set the right direction
+    this.windforce.scale.x = -this.object.scale.x;
+
+    if(this.object.scale.x > 0) {
+        this.windforce.body.x = this.object.body.x + 20;
+        this.windforce.body.velocity.x = 700;
+    } else {
+        this.windforce.body.x = this.object.body.x - 20;
+        this.windforce.body.velocity.x = -700;
+    }
+
+    // Fade out the gust
+    var fadeOutTween = game.add.tween(this.windforce).to( { alpha: 0 }, 600, Phaser.Easing.Linear.None).start();
+    fadeOutTween.onComplete.add(function(){
+        this.windforce.body.y = -100;
+    }, this);
+
+    this.windforce.animations.play("blow");
 };
 
 /*
@@ -359,11 +494,10 @@ player.prototype.update = function() {
     // Reset wallsliding
     this.object.wallSliding = false;
 
-    if (cursors.left.isDown && !this.object.dashing && (!this.object.attacking || (this.object.attacking && !this.isOnTheGround())))
-    {
+    if (cursors.left.isDown && !this.object.dashing && (!this.object.attacking || (this.object.attacking && !this.isOnTheGround()))) {
         this.move(-1);
 
-        if(!this.object.attacking) {
+        if (!this.object.attacking) {
             // If the player is falling
             if (this.isOnTheGround()) {
                 this.object.wallJumping = false;
@@ -385,7 +519,7 @@ player.prototype.update = function() {
 
         this.move(1);
 
-        if(!this.object.attacking) {
+        if (!this.object.attacking) {
             // If the player is falling
             if (this.isOnTheGround()) {
                 this.object.wallJumping = false;
@@ -403,9 +537,8 @@ player.prototype.update = function() {
 
         this.spriteOrientation(1);
     }
-    else
-    {
-        if(!this.object.attacking && !this.object.dashing) {
+    else {
+        if (!this.object.attacking && !this.object.dashing) {
             // If the player is falling
             if (!this.isOnTheGround()) {
                 this.object.animations.play('fall');
@@ -414,14 +547,17 @@ player.prototype.update = function() {
                 this.object.wallJumping = false;
             }
         }
-        if(!this.object.wallJumping && !this.object.dashing) {
+        if (!this.object.wallJumping && !this.object.dashing) {
 
             this.object.body.velocity.x -= (this.object.body.velocity.x < 0) ? 10 : -10;
-            if( this.object.body.velocity.x < 10 || this.object.body.velocity.x > -10) {
+            if (this.object.body.velocity.x < 10 || this.object.body.velocity.x > -10) {
                 this.object.body.velocity.x = 0;
             }
         }
     }
+
+    // Make sure the wind gust never falls
+    this.windforce.body.velocity.y = 0;
 
     // Set the first velocity
     this.previousLocation = {
@@ -438,7 +574,6 @@ player.prototype.update = function() {
 player.prototype.die = function() {
 
     console.log("You died");
-    game.state.restart();
 };
 
 // Export the prototype object

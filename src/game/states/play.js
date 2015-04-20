@@ -26,10 +26,14 @@ module.exports = {
     preload: function(){
 
         this.player = new (require("../gameobjects/player.js"))();
-        this.map = new (require("../maps/airu_ruins.js"))();
+        this.map = new (require("../maps/airu_ruins.js"))( this.player );
+        this.ui = new (require("../base/ui.js"))();
     },
 
     create: function(){
+
+        // We need this for later
+        var these = this;
 
         // Start the default Phaser Physics engine (we don't need box2d in this case)
         game.physics.startSystem(Phaser.Physics.P2JS);
@@ -48,15 +52,22 @@ module.exports = {
             this.map.getPlayerStart()
         );
 
-        this.map.onDeathLocationOverlap( this.player.die );
+        this.map.onDeathLocationOverlap( function(details) {
+            if(details.sprite.key === "player") {
+                these.player.die();
+                these.gameover();
+            }
+        });
         this.map.onWallJumpOverlap( this.player.wallContactBegin, this.player.wallContactEnd );
+
+        this.ui.create();
 
         // I'm not using the default camera follow because I want it smoothened
         // So set the camera to the player
-        cameraPos.setTo(this.player.object.x, this.player.object.y);
+        cameraPos.setTo(this.player.object.x, this.player.object.y - 500);
     },
 
-    update: function(){
+    update: function() {
 
         // Camera properties
         // the amount of damping, lower values = smoother camera movement
@@ -69,5 +80,10 @@ module.exports = {
         // Update the map (mostly for parallax purposes)
         this.map.update();
         this.player.update();
+    },
+
+    gameover: function() {
+
+        game.state.restart();
     }
 };

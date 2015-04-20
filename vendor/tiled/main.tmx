@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="32" tileheight="32" nextobjectid="53">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="32" tileheight="32" nextobjectid="153">
  <tileset firstgid="1" name="Tiles" tilewidth="32" tileheight="32">
   <image source="../../../../Downloads/graphicriver-9066848-fantasy-sidescroller-game-kit/Tiles and Objects/Tiles.png" width="320" height="288"/>
  </tileset>
@@ -10,7 +10,7 @@
  </layer>
  <layer name="Main" width="100" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt2k1Lw0AUheErbhQt+IHaurGVblS6Ez9wY1dWbRdW9P//FO9ghl5HYhJ0ksF5HzgkabMYcpzeFhQBAKC5w4oAAAAAAAAAAIDm3jQ3mjuTW817l4vKGH2kJexjLvTRJfZHWugjLfSRFt/HQugjBeyPbh0F17aPudBH28bmvC+r/7saBEeX49ZXl5+ROT/TnJtMgvOL1leXn1Fwzfzo1k99+O9Y9NGecXDN/uiW3R8H8nV+h3OdeR6f3R92nk9kNc/9kXkeH/M8LWV9LEzooz178jkbwt/pZfoN7kVz20V2pN5zPi3u9TP+0hwfNDPNVZSV5sX3UtXJiaZX8t6LZqm5/7tlZc/+7fvvurYj+khLWR9u3tfp4zrCmnL22z6mEdaUqzXNrlR/Xj0Fr7s9MSvyHG11/4N9Vi6PmvXgHteDmyWui6E0nx/T4nUflFsGeZXvz3tLs6HZFPqIrW4f7nfjvtBHbOyPtLA/0lK3j6EJfcTzAS1XQzc=
+   eJztmttKw0AQhke9UVQ8obbe2Io3Ku2N9Xyh9YBV24IVff9HcYbs0mElTYLuZnH/Dz62SSMM+buZ3SARAAAAUJ2dAgEAAAAAAAAAAAAAAADEySnbo+L3vNp59qyOYhOgzY6Vn+wle6O8Yr+c68Z1FJsAh87xrDyAf9rOsZvHkJBHSLrq8zbbpKw3XLNrZpQeI31jL3h1aXPEHrO37CNleci4bM538/8UeEKeV5LHE2V5yCh54HlVD5LHPTuibA0lPeSBkEddYH1VL7vOsc5jSMgjNHr/0aDpHrzpjFhfhUHvP+z6ytpxPp8Ery49ivaDeF6FZVYeI0IeocH7q7jQ88O+L9Hv1nVfRz/3j54fup93aNrP7Yh+7h/087jIy2OkRB7h2KSsN7j79DwaFa4F1VkxrlO5+3xgrrU9vqfGZ3bAnnupNC1sLkWZ7LOrOd+9sxP27u/KSh7927drXZ0R8oiLvDyk35fJ48JDTSnz2zz6HmpKlTl2g4qfV6/OeZkTA+Obt+r+B/peiS/sgnON5CC9RLJoUfX+0TfnrSCfieMH/bzf8v8Mi+wSIQ/flM1D9o1bhDx8g/kRF5gfcVE2j5YSefjjG451RqA=
   </data>
  </layer>
  <layer name="Decorations" width="100" height="50">
@@ -18,41 +18,53 @@
    eJzt1iEOwCAQRUF0kzpML9CbVHL/6+Cb0qDYJZlxoJ7iUwoAAAAAAAAAAADAOjU6AIDtHdEB2HMAptntvOw5ACPt4+5aXsGf53X258rhjg6AhLxPMHZGBwCQXgdqxgFD
   </data>
  </layer>
- <layer name="Foreground" width="100" height="50">
-  <data encoding="base64" compression="zlib">
-   eJzt0cEJADAIBEFLs4Wk/2IU8vcrhBnY/8FFAAAAAAAAAAAAAAAAAAAAAD873e1yeQePPwAAgEkBT9EBxw==
-  </data>
- </layer>
  <objectgroup name="Collision">
-  <object id="8" x="-1" y="1407" width="198.5" height="191.5"/>
-  <object id="9" x="290" y="1408" width="94.5" height="191.5"/>
-  <object id="10" x="353" y="1376" width="32" height="30.5"/>
-  <object id="11" type="walljump" x="384" y="1184" width="65" height="415"/>
-  <object id="17" type="walljump" x="310" y="1279" width="10" height="36"/>
-  <object id="19" x="159.5" y="1279" width="149.5" height="35.5"/>
-  <object id="23" x="128" y="1247.5" width="31.5" height="66"/>
-  <object id="24" x="63.5" y="1216.5" width="64.5" height="67"/>
-  <object id="25" x="0" y="1184" width="95.5" height="32.5"/>
-  <object id="27" x="448.5" y="1216" width="222.5" height="31.5"/>
-  <object id="29" type="walljump" x="-1" y="864.5" width="32" height="319.5"/>
-  <object id="30" x="103.5" y="1055" width="271" height="64.5"/>
-  <object id="31" type="walljump" x="375" y="1055" width="8" height="65.5"/>
-  <object id="32" type="walljump" x="96" y="1055" width="8" height="65.5"/>
-  <object id="33" type="walljump" x="96.5" y="895" width="8" height="65.5"/>
-  <object id="34" x="105" y="895" width="271" height="64.5"/>
-  <object id="35" type="walljump" x="375" y="895" width="8" height="65.5"/>
-  <object id="40" x="449" y="1376" width="254.5" height="34"/>
-  <object id="44" x="798.5" y="1376" width="98" height="224"/>
-  <object id="45" type="walljump" x="897" y="1312.5" width="9.5" height="286.5"/>
-  <object id="46" type="walljump" x="672" y="1216" width="31" height="95"/>
-  <object id="47" x="606.5" y="1248.5" width="64" height="62.5"/>
-  <object id="48" x="608.5" y="1410.5" width="96" height="189.5"/>
+  <object id="82" x="-1" y="1407" width="198.5" height="191.5"/>
+  <object id="83" x="290" y="1408" width="94.5" height="191.5"/>
+  <object id="84" x="353" y="1376" width="32" height="30.5"/>
+  <object id="85" type="walljump" x="384" y="1184" width="65" height="415"/>
+  <object id="86" type="walljump" x="310" y="1279" width="10" height="36"/>
+  <object id="87" x="159.5" y="1279" width="149.5" height="35.5"/>
+  <object id="88" x="128" y="1247.5" width="31.5" height="66"/>
+  <object id="89" x="63.5" y="1216.5" width="64.5" height="67"/>
+  <object id="90" x="0" y="1184" width="95.5" height="32.5"/>
+  <object id="91" x="448.5" y="1216" width="222.5" height="31.5"/>
+  <object id="92" type="walljump" x="-1" y="864.5" width="32" height="319.5"/>
+  <object id="93" x="103.5" y="1055" width="271" height="64.5"/>
+  <object id="94" type="walljump" x="375" y="1055" width="8" height="65.5"/>
+  <object id="95" type="walljump" x="96" y="1055" width="8" height="65.5"/>
+  <object id="96" type="walljump" x="96.5" y="895" width="8" height="65.5"/>
+  <object id="97" x="105" y="895" width="271" height="64.5"/>
+  <object id="98" type="walljump" x="375" y="895" width="8" height="65.5"/>
+  <object id="99" x="449" y="1376" width="254.5" height="34"/>
+  <object id="100" x="798.5" y="1376" width="98" height="224"/>
+  <object id="101" type="walljump" x="897" y="1312.5" width="9.5" height="286.5"/>
+  <object id="102" type="walljump" x="672" y="1216" width="31" height="95"/>
+  <object id="103" x="606.5" y="1248.5" width="64" height="62.5"/>
+  <object id="104" x="608.5" y="1410.5" width="96" height="189.5"/>
+  <object id="105" type="FallDeath" x="197.5" y="1564.75" width="92" height="34.5"/>
+  <object id="106" type="FallDeath" x="705" y="1564.25" width="92" height="34.5"/>
+  <object id="133" type="walljump" x="97" y="703.5" width="8" height="65.5"/>
+  <object id="134" type="walljump" x="375" y="703.5" width="8" height="65.5"/>
+  <object id="135" x="224.5" y="704" width="32" height="97"/>
+  <object id="136" x="288" y="703.5" width="86.5" height="63"/>
+  <object id="137" x="105.5" y="703.5" width="86.5" height="65.5"/>
+  <object id="138" x="288" y="766.5" width="31.5" height="32"/>
+  <object id="139" x="160.5" y="769.5" width="31.5" height="31"/>
+  <object id="141" type="walljump" x="0" y="575.5" width="31" height="160.5"/>
+  <object id="142" x="32.5" y="575.5" width="447" height="33"/>
  </objectgroup>
  <objectgroup name="Objects">
-  <object id="4" type="PlayerStart" x="26" y="1384" width="14" height="9"/>
- </objectgroup>
- <objectgroup name="Overlap">
-  <object id="50" type="FallDeath" x="197.5" y="1564.75" width="92" height="34.5"/>
-  <object id="51" type="FallDeath" x="705" y="1564.25" width="92" height="34.5"/>
+  <object id="4" type="PlayerStart" x="28" y="1396.5" width="8.5" height="9"/>
+  <object id="149" type="spawn_stonehead" x="226.5" y="1261" width="11" height="8.5">
+   <properties>
+    <property name="orientation" value="-1"/>
+   </properties>
+  </object>
+  <object id="152" type="spawn_stonehead" x="58" y="1164" width="10" height="8.5">
+   <properties>
+    <property name="orientation" value="-1"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

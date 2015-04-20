@@ -25,9 +25,7 @@
   },
   "homepage": "https://github.com/ShaPOC/ld32",
   "dependencies": {
-    "browserify": "^9.0.8",
-    "phaser": "^2.3.0",
-    "phaser-tiled": "^1.4.1"
+    "browserify": "^9.0.8"
   },
   "devDependencies": {
     "connect-livereload": "^0.5.3",

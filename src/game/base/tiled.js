@@ -28,7 +28,7 @@ var tiled = function() {};
 /*
  |--------------------------------------------------------------------------
  | Find Objects By Type
- |--------------------------------------------------------------------------\
+ |--------------------------------------------------------------------------
  |
  | Find objects in a Tiled layer that containt a property called "type" equal
  | to a certain value
@@ -57,5 +57,39 @@ tiled.prototype.findObjectsByType = function(type, map, layer, array) {
 
     return result;
 };
+
+/*
+ |--------------------------------------------------------------------------
+ | Find Objects By Partial Type
+ |--------------------------------------------------------------------------
+ |
+ | The same method as the one above, yet it searches if the type contains
+ | the word inserted, used for spawn locations.
+ */
+
+tiled.prototype.findObjectsByPartialType = function(type, map, layer, array) {
+
+    var result = [];
+    // We want the ability to search in more than just the objects array
+    array = array || "objects";
+
+    map.objects.forEach(function(objectlayer){
+
+        if(objectlayer.name === layer) {
+            objectlayer[array].forEach(function(element){
+                if(element.type.indexOf(type) >= 0) {
+                    //Phaser uses top left, Tiled bottom left so we have to adjust the y position
+                    //also keep in mind that the cup images are a bit smaller than the tile which is 16x16
+                    //so they might not be placed in the exact pixel position as in Tiled
+                    element.y -= map.tileHeight;
+                    result.push(element);
+                }
+            });
+        }
+    });
+
+    return result;
+};
+
 // Export the prototype object
 module.exports = tiled;
