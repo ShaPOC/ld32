@@ -259,7 +259,7 @@ player.prototype.move = function(orientation) {
 player.prototype.walljump = function(orientation){
 
     // Disable sliding for a short while to prevent cheating!
-    this.slideTimer = game.time.now + 750;
+    this.dashTimer = game.time.now + 750;
 
     this.object.wallJumping = true;
     this.object.body.moveUp(300);
